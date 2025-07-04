@@ -13,6 +13,13 @@ app.use(express.static('public'))
 // Use the optimized homophone function
 const findHomophones = findHomophonesOptimized
 
+// Simple in-memory cache for stats
+let statsCache = {
+  data: null,
+  timestamp: null,
+  ttl: 60 * 60 * 1000 // 60 minutes TTL
+}
+
 // API endpoint to find homophones
 app.get('/api/homophones/:word', async (req, res) => {
   const { word } = req.params
@@ -129,6 +136,18 @@ app.get('/api/health', async (req, res) => {
 // Database stats endpoint
 app.get('/api/stats', async (req, res) => {
   try {
+    const now = Date.now()
+    
+    // Check if we have valid cached data
+    if (statsCache.data && statsCache.timestamp && (now - statsCache.timestamp) < statsCache.ttl) {
+      return res.json({
+        ...statsCache.data,
+        cached: true,
+        cache_age_seconds: Math.floor((now - statsCache.timestamp) / 1000)
+      })
+    }
+    
+    // Fetch fresh data
     const totalCount = await db('pronunciations').count('id as count').first()
     const baseWordsCount = await db('pronunciations')
       .whereNull('variant_number')
@@ -139,14 +158,22 @@ app.get('/api/stats', async (req, res) => {
       .count('id as count')
       .first()
     
-    res.json({
+    const freshData = {
       success: true,
       stats: {
         total_pronunciations: parseInt(totalCount.count),
         base_pronunciations: parseInt(baseWordsCount.count),
         variant_pronunciations: parseInt(variantsCount.count)
-      }
-    })
+      },
+      cached: false,
+      generated_at: new Date().toISOString()
+    }
+    
+    // Update cache
+    statsCache.data = freshData
+    statsCache.timestamp = now
+    
+    res.json(freshData)
   } catch (error) {
     res.status(500).json({
       success: false,
