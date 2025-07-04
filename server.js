@@ -1,6 +1,7 @@
 const express = require('express')
 const db = require('./db_connection')
 const path = require('path')
+const { findHomophonesOptimized } = require('./homophone_functions')
 
 const app = express()
 const PORT = process.env.PORT || 11001
@@ -9,87 +10,8 @@ const PORT = process.env.PORT || 11001
 app.use(express.json())
 app.use(express.static('public'))
 
-// Function to find homophones (same logic as CLI)
-const findHomophones = async (inputWord) => {
-  try {
-    const normalizedWord = inputWord.toUpperCase().trim()
-    
-    // Find all pronunciations for the input word
-    const pronunciations = await db('pronunciations')
-      .select('phonetic', 'word_variant', 'variant_number')
-      .where('word', normalizedWord)
-      .orderBy('variant_number')
-    
-    if (pronunciations.length === 0) {
-      return {
-        success: false,
-        message: `Word "${inputWord}" not found in the pronunciation dictionary.`,
-        word: inputWord
-      }
-    }
-    
-    const results = {
-      success: true,
-      word: inputWord,
-      pronunciations: []
-    }
-    
-    // Find homophones for each pronunciation
-    for (const pronunciation of pronunciations) {
-      const homophones = await db('pronunciations')
-        .select('word', 'word_variant', 'variant_number')
-        .where('phonetic', pronunciation.phonetic)
-        .whereNot('word', normalizedWord)
-        .orderBy('word')
-        .orderBy('variant_number')
-      
-      // Group homophones by base word
-      const groupedHomophones = {}
-      homophones.forEach(h => {
-        if (!groupedHomophones[h.word]) {
-          groupedHomophones[h.word] = []
-        }
-        groupedHomophones[h.word].push(h)
-      })
-      
-      const homophoneList = []
-      Object.keys(groupedHomophones).sort().forEach(baseWord => {
-        const variants = groupedHomophones[baseWord]
-        if (variants.length === 1 && variants[0].variant_number === null) {
-          homophoneList.push({
-            word: variants[0].word,
-            variants: []
-          })
-        } else {
-          homophoneList.push({
-            word: baseWord,
-            variants: variants.map(v => ({
-              word_variant: v.word_variant,
-              variant_number: v.variant_number
-            }))
-          })
-        }
-      })
-      
-      results.pronunciations.push({
-        word_variant: pronunciation.word_variant,
-        variant_number: pronunciation.variant_number,
-        phonetic: pronunciation.phonetic,
-        homophones: homophoneList,
-        homophone_count: homophones.length
-      })
-    }
-    
-    return results
-  } catch (error) {
-    console.error('Error finding homophones:', error)
-    return {
-      success: false,
-      message: 'An error occurred while searching for homophones.',
-      error: error.message
-    }
-  }
-}
+// Use the optimized homophone function
+const findHomophones = findHomophonesOptimized
 
 // API endpoint to find homophones
 app.get('/api/homophones/:word', async (req, res) => {
