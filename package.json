@@ -4,7 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "node server.js",
+    "setup": "npm run migrate && npm run load-data",
+    "migrate": "npx knex migrate:latest",
+    "migrate:rollback": "npx knex migrate:rollback",
+    "migrate:status": "npx knex migrate:status",
+    "load-data": "node load_db.js",
+    "check-db": "node check_db.js",
+    "performance": "node performance_analysis.js",
+    "performance:simple": "node simple_performance_test.js"
   },
   "keywords": [],
   "author": "",
