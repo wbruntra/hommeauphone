@@ -40,8 +40,14 @@
   gap: 15px;
   margin-bottom: 30px;
   
+  @media (max-width: 768px) {
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
   @media (max-width: 600px) {
     flex-direction: column;
+    gap: 10px;
   }
 }
 
@@ -57,6 +63,16 @@
     outline: none;
     border-color: #667eea;
     box-shadow: none;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 12px 16px;
+    font-size: 1rem;
+  }
+  
+  @media (max-width: 600px) {
+    padding: 12px 15px;
+    font-size: 16px; // Prevents zoom on iOS
   }
 }
 
@@ -78,6 +94,16 @@
     background: #ccc;
     cursor: not-allowed;
   }
+  
+  @media (max-width: 768px) {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+  
+  @media (max-width: 600px) {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
 }
 
 .loading {
@@ -98,6 +124,14 @@
 
 .results {
   margin-top: 30px;
+  
+  @media (max-width: 768px) {
+    margin-top: 20px;
+  }
+  
+  @media (max-width: 600px) {
+    margin-top: 15px;
+  }
 }
 
 .word-header {
@@ -111,6 +145,25 @@
     color: #333;
     margin-bottom: 5px;
   }
+  
+  @media (max-width: 768px) {
+    padding: 15px;
+    margin-bottom: 15px;
+    
+    h2 {
+      font-size: 1.3em;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    padding: 12px;
+    margin-bottom: 12px;
+    border-left-width: 3px;
+    
+    h2 {
+      font-size: 1.2em;
+    }
+  }
 }
 
 .pronunciation-section {
@@ -119,6 +172,16 @@
   background: #fafafa;
   border-radius: 10px;
   border: 1px solid #e0e0e0;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 20px;
+    padding: 15px;
+  }
+  
+  @media (max-width: 600px) {
+    margin-bottom: 15px;
+    padding: 12px;
+  }
 }
 
 .pronunciation-header {
@@ -177,6 +240,26 @@
   border-top: 1px solid #e0e0e0;
   color: #666;
   font-size: 0.9em;
+  
+  @media (max-width: 768px) {
+    margin-top: 25px;
+    padding-top: 15px;
+    font-size: 0.85em;
+  }
+  
+  @media (max-width: 600px) {
+    margin-top: 20px;
+    padding-top: 12px;
+    font-size: 0.8em;
+    
+    p {
+      margin-bottom: 8px;
+      
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
 }
 
 .no-homophones {
@@ -187,13 +270,90 @@
 }
 
 // Mobile responsive adjustments
-@media (max-width: 600px) {
-  .container {
-    padding: 20px;
+@media (max-width: 768px) {
+  .app {
+    padding: 10px;
+    align-items: flex-start;
+    padding-top: 20px; // Reduce top margin on mobile
   }
   
-  .header h1 {
-    font-size: 2em;
+  .container {
+    padding: 20px 15px;
+    border-radius: 15px;
+    max-width: 100%;
+  }
+  
+  .header {
+    margin-bottom: 25px; // Reduce spacing
+    
+    h1 {
+      font-size: 2em;
+      margin-bottom: 5px;
+    }
+    
+    p {
+      font-size: 1em;
+    }
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 15px 10px;
+    border-radius: 10px;
+  }
+  
+  .header {
+    margin-bottom: 20px;
+    
+    h1 {
+      font-size: 1.8em;
+    }
+  }
+}
+
+// Additional mobile optimizations for very small screens
+@media (max-width: 480px) {
+  .app {
+    padding: 5px;
+    padding-top: 15px;
+  }
+  
+  .container {
+    padding: 12px 8px;
+    border-radius: 8px;
+  }
+  
+  .header {
+    margin-bottom: 15px;
+    
+    h1 {
+      font-size: 1.6em;
+      margin-bottom: 3px;
+    }
+    
+    p {
+      font-size: 0.9em;
+    }
+  }
+}
+
+// Landscape mobile optimization
+@media (max-width: 768px) and (orientation: landscape) {
+  .app {
+    padding-top: 10px;
+  }
+  
+  .container {
+    padding: 15px 20px;
+  }
+  
+  .header {
+    margin-bottom: 15px;
+    
+    h1 {
+      font-size: 1.8em;
+    }
   }
 }
 
@@ -398,6 +558,7 @@
     cursor: pointer;
     transition: all 0.3s;
     display: inline-block;
+    font-size: 1rem;
     
     &.active {
       color: #667eea;
@@ -407,6 +568,37 @@
     
     &:hover:not(.active) {
       color: #5a6fd8;
+    }
+  }
+  
+  // Mobile navigation improvements
+  @media (max-width: 768px) {
+    margin-bottom: 20px;
+    
+    .nav-link {
+      padding: 12px 20px;
+      font-size: 0.9rem;
+      flex: 1;
+      text-align: center;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .nav-link {
+      padding: 10px 15px;
+      font-size: 0.85rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .nav-link {
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      
+      // Make text even more compact on very small screens
+      span.emoji {
+        display: none; // Hide emojis on very small screens
+      }
     }
   }
 }

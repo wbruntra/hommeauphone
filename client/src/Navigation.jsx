@@ -5,13 +5,13 @@ function Navigation({ activeTab, onTabChange }) {
         className={`nav-link ${activeTab === 'search' ? 'active' : ''}`}
         onClick={() => onTabChange('search')}
       >
-        🔍 Word Search
+        <span className="emoji">🔍 </span>Word Search
       </button>
       <button 
         className={`nav-link ${activeTab === 'editor' ? 'active' : ''}`}
         onClick={() => onTabChange('editor')}
       >
-        ✏️ Sentence Editor
+        <span className="emoji">✏️ </span>Sentence Editor
       </button>
     </div>
   )
